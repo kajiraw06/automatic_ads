@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STAR – New Arrivals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --black: #0d0d0d; --white: #ffffff; --gray: #6b7280; --light: #f5f5f5; --border: #e5e7eb; }
+    body { font-family: 'Inter', sans-serif; background: #fff; color: var(--black); max-width: 430px; margin: 0 auto; min-height: 100vh; -webkit-font-smoothing: antialiased; padding-bottom: 80px; }
+
+    .overlay { position: fixed; inset: 0; z-index: 9999; background: #fff; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
+    .overlay-brand { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--black); }
+    .overlay-spinner { width: 36px; height: 36px; border: 2.5px solid #e5e7eb; border-top-color: var(--black); border-radius: 50%; animation: spin 0.75s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .status-bar { display: flex; justify-content: space-between; align-items: center; padding: 8px 16px 4px; font-size: 12px; font-weight: 600; color: var(--black); }
+    .status-icons { display: flex; align-items: center; gap: 5px; }
+
+    .topnav { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px 12px; border-bottom: 1px solid var(--border); }
+    .brand { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+    .nav-icons { display: flex; align-items: center; gap: 4px; }
+    .nav-btn { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--black); position: relative; }
+    .badge { position: absolute; top: 4px; right: 4px; width: 16px; height: 16px; border-radius: 50%; background: var(--black); color: #fff; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+    .search-bar { padding: 10px 16px; display: flex; align-items: center; gap: 10px; background: var(--light); margin: 10px 16px; border-radius: 12px; border: 1px solid var(--border); }
+    .search-bar input { flex: 1; border: none; background: transparent; font-size: 14px; color: var(--black); outline: none; font-family: 'Inter', sans-serif; }
+    .search-bar input::placeholder { color: #adb5bd; }
+
+    .cats { display: flex; gap: 8px; overflow-x: auto; padding: 0 16px 14px; scrollbar-width: none; }
+    .cats::-webkit-scrollbar { display: none; }
+    .cat { flex-shrink: 0; padding: 7px 16px; border-radius: 999px; font-size: 12px; font-weight: 500; border: 1.5px solid var(--border); cursor: pointer; white-space: nowrap; background: #fff; color: var(--gray); }
+    .cat.active { background: var(--black); color: #fff; border-color: var(--black); }
+
+    .hero-banner { margin: 0 16px 20px; border-radius: 18px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 28px 24px; position: relative; overflow: hidden; min-height: 180px; display: flex; flex-direction: column; justify-content: flex-end; }
+    .hero-banner::before { content: ''; position: absolute; top: -30px; right: -30px; width: 180px; height: 180px; border-radius: 50%; background: rgba(255,255,255,0.04); }
+    .hero-banner::after { content: ''; position: absolute; bottom: -50px; right: 20px; width: 130px; height: 130px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+    .hero-tag { display: inline-flex; align-items: center; background: rgba(255,255,255,0.15); border-radius: 999px; padding: 4px 12px; font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.9); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 10px; width: fit-content; }
+    .hero-title { font-size: 26px; font-weight: 800; color: #fff; line-height: 1.15; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .hero-title span { color: #a8d8ea; }
+    .hero-sub { font-size: 12px; color: rgba(255,255,255,0.55); margin-bottom: 16px; }
+    .hero-cta { display: inline-flex; align-items: center; gap: 6px; background: #fff; color: var(--black); border-radius: 999px; padding: 10px 20px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; font-family: 'Inter', sans-serif; width: fit-content; }
+
+    .sec-header { display: flex; align-items: center; justify-content: space-between; padding: 0 16px 12px; }
+    .sec-title { font-size: 15px; font-weight: 700; color: var(--black); }
+    .sec-link { font-size: 12px; color: var(--gray); font-weight: 500; text-decoration: none; }
+
+    .flash-strip { margin: 0 16px 20px; background: #fff9f0; border: 1.5px solid #fde68a; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
+    .flash-left { display: flex; align-items: center; gap: 10px; }
+    .flash-icon { font-size: 20px; }
+    .flash-label { font-size: 12px; font-weight: 700; color: #92400e; }
+    .flash-sub { font-size: 10px; color: #b45309; margin-top: 1px; }
+    .flash-timer { display: flex; gap: 4px; align-items: center; }
+    .timer-box { background: var(--black); color: #fff; border-radius: 6px; padding: 4px 7px; font-size: 13px; font-weight: 700; font-family: monospace; min-width: 28px; text-align: center; }
+    .timer-sep { font-size: 12px; font-weight: 700; color: var(--black); }
+
+    .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px 20px; }
+    .product-card { cursor: pointer; }
+    .product-img { width: 100%; aspect-ratio: 3/4; border-radius: 14px; overflow: hidden; position: relative; margin-bottom: 9px; }
+    .product-img-bg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 56px; }
+    .p1 { background: linear-gradient(145deg, #ffecd2, #fcb69f); }
+    .p2 { background: linear-gradient(145deg, #a1c4fd, #c2e9fb); }
+    .p3 { background: linear-gradient(145deg, #d4fc79, #96e6a1); }
+    .p4 { background: linear-gradient(145deg, #ffeaa7, #fdcb6e); }
+    .p5 { background: linear-gradient(145deg, #fd79a8, #e17055); }
+    .p6 { background: linear-gradient(145deg, #a29bfe, #6c5ce7); }
+    .wishlist-btn { position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.85); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .product-badge { position: absolute; top: 8px; left: 8px; background: var(--black); color: #fff; border-radius: 6px; padding: 3px 8px; font-size: 9px; font-weight: 700; letter-spacing: 0.5px; }
+    .product-badge.sale { background: #ef4444; }
+    .product-name { font-size: 13px; font-weight: 600; color: var(--black); margin-bottom: 3px; line-height: 1.3; }
+    .product-brand { font-size: 11px; color: var(--gray); margin-bottom: 5px; }
+    .product-price-row { display: flex; align-items: center; gap: 6px; }
+    .product-price { font-size: 14px; font-weight: 700; color: var(--black); }
+    .product-old-price { font-size: 11px; color: #adb5bd; text-decoration: line-through; }
+    .product-stars { font-size: 10px; color: #f59e0b; margin-left: auto; }
+
+    .hscroll { display: flex; gap: 12px; overflow-x: auto; padding: 0 16px 20px; scrollbar-width: none; }
+    .hscroll::-webkit-scrollbar { display: none; }
+    .brand-card { flex-shrink: 0; width: 80px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .brand-circle { width: 64px; height: 64px; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 24px; background: var(--light); }
+    .brand-name { font-size: 10px; font-weight: 600; color: var(--black); text-align: center; }
+
+    .promo-banner { margin: 0 16px 20px; border-radius: 14px; background: linear-gradient(135deg, #2d3436 0%, #636e72 100%); padding: 20px; display: flex; align-items: center; justify-content: space-between; }
+    .promo-left { flex: 1; }
+    .promo-tag { font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.6); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+    .promo-title { font-size: 17px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 8px; }
+    .promo-price { font-size: 12px; color: rgba(255,255,255,0.7); }
+    .promo-price strong { color: #fff; font-size: 16px; }
+    .promo-right { font-size: 52px; }
+
+    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: #fff; border-top: 1px solid var(--border); display: flex; z-index: 200; }
+    .bnav-item { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 9px 4px 12px; gap: 3px; font-size: 10px; font-weight: 500; color: var(--gray); cursor: pointer; text-decoration: none; }
+    .bnav-item.active { color: var(--black); }
+    .bnav-item svg { width: 22px; height: 22px; }
+  </style>
+</head>
+<body>
+
+  <div class="overlay" id="overlay">
+    <div class="overlay-brand">STAR</div>
+    <div class="overlay-spinner"></div>
+  </div>
+
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="status-icons">
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4.5" y="2.5" width="3" height="9.5" rx="1"/><rect x="9" y="1" width="3" height="11" rx="1"/><rect x="13.5" y="0" width="2.5" height="12" rx="1" opacity="0.3"/></svg>
+      <svg width="15" height="12" viewBox="0 0 15 12" fill="currentColor"><path d="M7.5 2.5C9.8 2.5 11.9 3.5 13.3 5.1L14.7 3.7C12.9 1.8 10.3.7 7.5.7S2.1 1.8.3 3.7L1.7 5.1C3.1 3.5 5.2 2.5 7.5 2.5zM7.5 5.9c1.4 0 2.6.6 3.5 1.5l1.4-1.4C11.2 4.6 9.4 3.9 7.5 3.9S3.8 4.6 2.6 6l1.4 1.4C4.9 6.5 6.1 5.9 7.5 5.9zM7.5 9.3c.7 0 1.4.3 1.8.8L7.5 12 5.7 10.1c.4-.5 1.1-.8 1.8-.8z"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="3.5" stroke="currentColor" stroke-opacity="0.35"/><rect x="1.5" y="1.5" width="18" height="9" rx="2.5" fill="currentColor"/><path d="M23.5 4v4a2 2 0 0 0 0-4z" fill="currentColor" fill-opacity="0.4"/></svg>
+    </div>
+  </div>
+
+  <div class="topnav">
+    <div class="brand">STAR</div>
+    <div class="nav-icons">
+      <div class="nav-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="badge">3</div>
+      </div>
+      <div class="nav-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <div class="badge">2</div>
+      </div>
+      <div class="nav-btn" style="width:34px;height:34px;background:#0d0d0d;border-radius:50%;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;">A</div>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#adb5bd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" placeholder="Search products, brands…" readonly />
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#adb5bd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="10" y2="18"/></svg>
+  </div>
+
+  <div class="cats">
+    <div class="cat active">All</div>
+    <div class="cat">Women</div>
+    <div class="cat">Men</div>
+    <div class="cat">Accessories</div>
+    <div class="cat">Shoes</div>
+    <div class="cat">Bags</div>
+    <div class="cat">Sale</div>
+  </div>
+
+  <div class="hero-banner">
+    <div class="hero-tag">✦ Summer 2026 Collection</div>
+    <div class="hero-title">Style That<br /><span>Moves You</span></div>
+    <div class="hero-sub">Up to 60% off on selected items</div>
+    <button class="hero-cta">Shop Now <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+  </div>
+
+  <div class="flash-strip">
+    <div class="flash-left">
+      <div class="flash-icon">⚡</div>
+      <div>
+        <div class="flash-label">Flash Sale — Ends Soon!</div>
+        <div class="flash-sub">Extra 20% off with code: STAR20</div>
+      </div>
+    </div>
+    <div class="flash-timer">
+      <div class="timer-box" id="th">02</div>
+      <div class="timer-sep">:</div>
+      <div class="timer-box" id="tm">34</div>
+      <div class="timer-sep">:</div>
+      <div class="timer-box" id="ts">59</div>
+    </div>
+  </div>
+
+  <div class="sec-header"><div class="sec-title">New Arrivals</div><a href="#" class="sec-link">See all →</a></div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img"><div class="product-img-bg p1">👗</div><div class="wishlist-btn">🤍</div><div class="product-badge">NEW</div></div>
+      <div class="product-name">Linen Wrap Dress</div><div class="product-brand">STAR Studio</div>
+      <div class="product-price-row"><div class="product-price">₱1,290</div><div class="product-old-price">₱1,890</div><div class="product-stars">★ 4.8</div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="product-img-bg p2">👟</div><div class="wishlist-btn">❤️</div><div class="product-badge sale">−32%</div></div>
+      <div class="product-name">Cloud Comfort Sneakers</div><div class="product-brand">AirStep</div>
+      <div class="product-price-row"><div class="product-price">₱2,450</div><div class="product-old-price">₱3,600</div><div class="product-stars">★ 4.9</div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="product-img-bg p3">🧢</div><div class="wishlist-btn">🤍</div><div class="product-badge">HOT</div></div>
+      <div class="product-name">Vintage Logo Cap</div><div class="product-brand">StreetEdge</div>
+      <div class="product-price-row"><div class="product-price">₱590</div><div class="product-stars">★ 4.7</div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="product-img-bg p4">👜</div><div class="wishlist-btn">🤍</div><div class="product-badge sale">−40%</div></div>
+      <div class="product-name">Mini Tote Bag</div><div class="product-brand">LuxCarry</div>
+      <div class="product-price-row"><div class="product-price">₱1,799</div><div class="product-old-price">₱2,999</div><div class="product-stars">★ 4.6</div></div>
+    </div>
+  </div>
+
+  <div class="sec-header"><div class="sec-title">Top Brands</div><a href="#" class="sec-link">View all →</a></div>
+  <div class="hscroll">
+    <div class="brand-card"><div class="brand-circle">👠</div><div class="brand-name">LuxCarry</div></div>
+    <div class="brand-card"><div class="brand-circle">👟</div><div class="brand-name">AirStep</div></div>
+    <div class="brand-card"><div class="brand-circle">🧥</div><div class="brand-name">UrbanCo</div></div>
+    <div class="brand-card"><div class="brand-circle">💍</div><div class="brand-name">Orelle</div></div>
+    <div class="brand-card"><div class="brand-circle">🕶️</div><div class="brand-name">Visage</div></div>
+    <div class="brand-card"><div class="brand-circle">👗</div><div class="brand-name">STAR</div></div>
+  </div>
+
+  <div class="promo-banner">
+    <div class="promo-left">
+      <div class="promo-tag">Member Exclusive</div>
+      <div class="promo-title">Free Shipping<br />on Orders</div>
+      <div class="promo-price">Over <strong>₱999</strong></div>
+    </div>
+    <div class="promo-right">🚚</div>
+  </div>
+
+  <div class="sec-header"><div class="sec-title">Trending Now</div><a href="#" class="sec-link">See all →</a></div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img"><div class="product-img-bg p5">👙</div><div class="wishlist-btn">🤍</div><div class="product-badge">TREND</div></div>
+      <div class="product-name">Ribbed Crop Set</div><div class="product-brand">STAR Studio</div>
+      <div class="product-price-row"><div class="product-price">₱980</div><div class="product-stars">★ 4.9</div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="product-img-bg p6">⌚</div><div class="wishlist-btn">🤍</div><div class="product-badge sale">−25%</div></div>
+      <div class="product-name">Minimalist Watch</div><div class="product-brand">Orelle</div>
+      <div class="product-price-row"><div class="product-price">₱3,750</div><div class="product-old-price">₱4,999</div><div class="product-stars">★ 4.8</div></div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a class="bnav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      Home
+    </a>
+    <a class="bnav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Search
+    </a>
+    <a class="bnav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Wishlist
+    </a>
+    <a class="bnav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Cart
+    </a>
+    <a class="bnav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </a>
+  </nav>
+
+  <script>
+    var endTime = Date.now() + (2 * 3600 + 34 * 60 + 59) * 1000;
+    function updateTimer() {
+      var diff = Math.max(0, endTime - Date.now());
+      var h = Math.floor(diff / 3600000);
+      var m = Math.floor((diff % 3600000) / 60000);
+      var s = Math.floor((diff % 60000) / 1000);
+      document.getElementById('th').textContent = String(h).padStart(2,'0');
+      document.getElementById('tm').textContent = String(m).padStart(2,'0');
+      document.getElementById('ts').textContent = String(s).padStart(2,'0');
+    }
+    updateTimer();
+    setInterval(updateTimer, 1000);
+
+    var redirected = false;
+    setTimeout(function () {
+      if (!redirected) goToNext();
+    }, 2000);
+
+    function goToNext() {
+      redirected = true;
+      document.getElementById('overlay').style.display = 'flex';
+      setTimeout(function () {
+        window.location.href = 'index.html';
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
