@@ -3,735 +3,276 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Time2Bet - Social Casino Games - Apps on Google Play</title>
+  <title>STAR – New Arrivals</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --black: #0d0d0d; --white: #ffffff; --gray: #6b7280; --light: #f5f5f5; --border: #e5e7eb; }
+    body { font-family: 'Inter', sans-serif; background: #fff; color: var(--black); max-width: 430px; margin: 0 auto; min-height: 100vh; -webkit-font-smoothing: antialiased; padding-bottom: 80px; }
 
-    :root {
-      --green: #01875f;
-      --green-dark: #006b4c;
-      --text-primary: #202124;
-      --text-secondary: #5f6368;
-      --text-link: #1a73e8;
-      --border: #e8eaed;
-      --surface: #f8f9fa;
-      --star: #f5a623;
-      --radius-full: 999px;
-    }
+    .overlay { position: fixed; inset: 0; z-index: 9999; background: #fff; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
+    .overlay-brand { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--black); }
+    .overlay-spinner { width: 36px; height: 36px; border: 2.5px solid #e5e7eb; border-top-color: var(--black); border-radius: 50%; animation: spin 0.75s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    html { scroll-behavior: smooth; }
+    .status-bar { display: flex; justify-content: space-between; align-items: center; padding: 8px 16px 4px; font-size: 12px; font-weight: 600; color: var(--black); }
+    .status-icons { display: flex; align-items: center; gap: 5px; }
 
-    body {
-      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #fff;
-      color: var(--text-primary);
-      max-width: 430px;
-      margin: 0 auto;
-      min-height: 100vh;
-      padding-bottom: 120px;
-      -webkit-font-smoothing: antialiased;
-    }
+    .topnav { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px 12px; border-bottom: 1px solid var(--border); }
+    .brand { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+    .nav-icons { display: flex; align-items: center; gap: 4px; }
+    .nav-btn { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--black); position: relative; }
+    .badge { position: absolute; top: 4px; right: 4px; width: 16px; height: 16px; border-radius: 50%; background: var(--black); color: #fff; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
 
-    /* STATUS BAR */
-    .status-bar {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 6px 16px 2px;
-      background: #fff;
-      font-size: 12px; font-weight: 500; color: #000;
-    }
-    .status-bar-left { letter-spacing: 0.2px; }
-    .status-bar-right { display: flex; align-items: center; gap: 5px; }
+    .search-bar { padding: 10px 16px; display: flex; align-items: center; gap: 10px; background: var(--light); margin: 10px 16px; border-radius: 12px; border: 1px solid var(--border); }
+    .search-bar input { flex: 1; border: none; background: transparent; font-size: 14px; color: var(--black); outline: none; font-family: 'Inter', sans-serif; }
+    .search-bar input::placeholder { color: #adb5bd; }
 
-    /* TOP NAV */
-    .topbar {
-      position: sticky; top: 0; z-index: 200;
-      display: flex; align-items: center;
-      padding: 10px 16px;
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-      gap: 0;
-    }
-    .topbar-logo { display: flex; align-items: center; gap: 6px; flex: 1; text-decoration: none; }
-    .topbar-logo-text { font-size: 18px; color: #5f6368; font-weight: 400; letter-spacing: -0.3px; }
-    .topbar-icons { display: flex; align-items: center; gap: 4px; }
-    .topbar-icon-btn {
-      width: 40px; height: 40px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--text-secondary); cursor: pointer; flex-shrink: 0;
-    }
-    .topbar-icon-btn:hover { background: var(--surface); }
-    .topbar-avatar {
-      width: 34px; height: 34px; border-radius: 50%; background: #4285f4;
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: 14px; font-weight: 500; cursor: pointer; flex-shrink: 0;
-    }
+    .cats { display: flex; gap: 8px; overflow-x: auto; padding: 0 16px 14px; scrollbar-width: none; }
+    .cats::-webkit-scrollbar { display: none; }
+    .cat { flex-shrink: 0; padding: 7px 16px; border-radius: 999px; font-size: 12px; font-weight: 500; border: 1.5px solid var(--border); cursor: pointer; white-space: nowrap; background: #fff; color: var(--gray); }
+    .cat.active { background: var(--black); color: #fff; border-color: var(--black); }
 
-    /* APP HEADER */
-    .app-header { padding: 16px 16px 10px; display: flex; gap: 16px; align-items: flex-start; }
-    .app-icon {
-      width: 64px; height: 64px; border-radius: 14px; flex-shrink: 0;
-      border: 1px solid var(--border);
-      background: #4a1ea1;
-      display: flex; align-items: center; justify-content: center; overflow: hidden;
-    }
-    .app-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; }
-    .app-info { flex: 1; min-width: 0; padding-top: 2px; }
-    .app-name { font-size: 20px; font-weight: 400; line-height: 1.3; color: #000; margin-bottom: 2px; }
-    .app-dev { font-size: 14px; color: var(--green); font-weight: 500; margin-bottom: 0; line-height: 1.4; }
+    .hero-banner { margin: 0 16px 20px; border-radius: 18px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 28px 24px; position: relative; overflow: hidden; min-height: 180px; display: flex; flex-direction: column; justify-content: flex-end; }
+    .hero-banner::before { content: ''; position: absolute; top: -30px; right: -30px; width: 180px; height: 180px; border-radius: 50%; background: rgba(255,255,255,0.04); }
+    .hero-banner::after { content: ''; position: absolute; bottom: -50px; right: 20px; width: 130px; height: 130px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+    .hero-tag { display: inline-flex; align-items: center; background: rgba(255,255,255,0.15); border-radius: 999px; padding: 4px 12px; font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.9); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 10px; width: fit-content; }
+    .hero-title { font-size: 26px; font-weight: 800; color: #fff; line-height: 1.15; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .hero-title span { color: #a8d8ea; }
+    .hero-sub { font-size: 12px; color: rgba(255,255,255,0.55); margin-bottom: 16px; }
+    .hero-cta { display: inline-flex; align-items: center; gap: 6px; background: #fff; color: var(--black); border-radius: 999px; padding: 10px 20px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; font-family: 'Inter', sans-serif; width: fit-content; }
 
-    /* PLAY PROTECT */
-    .play-protect { display: none; }
+    .sec-header { display: flex; align-items: center; justify-content: space-between; padding: 0 16px 12px; }
+    .sec-title { font-size: 15px; font-weight: 700; color: var(--black); }
+    .sec-link { font-size: 12px; color: var(--gray); font-weight: 500; text-decoration: none; }
 
-    /* STATS CHIPS */
-    .stats-chips {
-      display: flex; padding: 4px 0 0;
-      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-    }
-    .chip {
-      flex: 1; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 10px 6px; border-right: 1px solid var(--border); gap: 2px;
-    }
-    .chip:last-child { border-right: none; }
-    .chip-top { font-size: 13px; font-weight: 500; color: var(--text-primary); display: flex; align-items: center; gap: 3px; }
-    .chip-top .star-icon { color: var(--star); font-size: 11px; }
-    .chip-bot { font-size: 10px; color: var(--text-secondary); text-align: center; line-height: 1.3; }
-    .chip-top svg { color: var(--text-secondary); }
-    .rated-badge {
-      border: 1px solid var(--text-secondary); border-radius: 3px;
-      padding: 1px 4px; font-size: 11px; font-weight: 700; color: var(--text-secondary);
-      display: flex; align-items: center; gap: 3px;
-    }
+    .flash-strip { margin: 0 16px 20px; background: #fff9f0; border: 1.5px solid #fde68a; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
+    .flash-left { display: flex; align-items: center; gap: 10px; }
+    .flash-icon { font-size: 20px; }
+    .flash-label { font-size: 12px; font-weight: 700; color: #92400e; }
+    .flash-sub { font-size: 10px; color: #b45309; margin-top: 1px; }
+    .flash-timer { display: flex; gap: 4px; align-items: center; }
+    .timer-box { background: var(--black); color: #fff; border-radius: 6px; padding: 4px 7px; font-size: 13px; font-weight: 700; font-family: monospace; min-width: 28px; text-align: center; }
+    .timer-sep { font-size: 12px; font-weight: 700; color: var(--black); }
 
-    /* INSTALL BUTTONS */
-    .install-row { padding: 14px 16px 0; }
-    .btn-install {
-      width: 100%; display: flex; align-items: center; justify-content: center;
-      background: var(--green); color: #fff; border: none;
-      border-radius: var(--radius-full); padding: 13px 24px;
-      font-size: 15px; font-weight: 500; cursor: pointer;
-      text-decoration: none; font-family: 'Roboto', sans-serif;
-      letter-spacing: 0.2px; transition: background 0.15s;
-    }
-    .btn-install:active { background: var(--green-dark); }
-    .install-wishlist { display: none; }
-    /* Share + Wishlist text links */
-    .install-actions {
-      display: flex; align-items: center; justify-content: center; gap: 28px;
-      padding: 10px 16px 12px;
-    }
-    .install-action-btn {
-      display: flex; align-items: center; gap: 6px;
-      color: var(--green); font-size: 13px; font-weight: 500;
-      text-decoration: none; cursor: pointer; background: none; border: none;
-      font-family: 'Roboto', sans-serif;
-    }
-    /* Device / Family notice */
-    .device-notice {
-      padding: 8px 16px 12px; border-bottom: 1px solid var(--border);
-    }
-    .device-notice-row {
-      display: flex; align-items: flex-start; gap: 10px;
-      font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 6px;
-    }
-    .device-notice-row:last-child { margin-bottom: 0; }
-    .device-notice-row svg { flex-shrink: 0; margin-top: 1px; }
-    .device-notice-row a { color: var(--text-link); text-decoration: none; }
+    .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px 20px; }
+    .product-card { cursor: pointer; }
+    .product-img { width: 100%; aspect-ratio: 3/4; border-radius: 14px; overflow: hidden; position: relative; margin-bottom: 9px; }
+    .product-img-bg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 56px; }
+    .p1 { background: linear-gradient(145deg, #ffecd2, #fcb69f); }
+    .p2 { background: linear-gradient(145deg, #a1c4fd, #c2e9fb); }
+    .p3 { background: linear-gradient(145deg, #d4fc79, #96e6a1); }
+    .p4 { background: linear-gradient(145deg, #ffeaa7, #fdcb6e); }
+    .p5 { background: linear-gradient(145deg, #fd79a8, #e17055); }
+    .p6 { background: linear-gradient(145deg, #a29bfe, #6c5ce7); }
+    .wishlist-btn { position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.85); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .product-badge { position: absolute; top: 8px; left: 8px; background: var(--black); color: #fff; border-radius: 6px; padding: 3px 8px; font-size: 9px; font-weight: 700; letter-spacing: 0.5px; }
+    .product-badge.sale { background: #ef4444; }
+    .product-name { font-size: 13px; font-weight: 600; color: var(--black); margin-bottom: 3px; line-height: 1.3; }
+    .product-brand { font-size: 11px; color: var(--gray); margin-bottom: 5px; }
+    .product-price-row { display: flex; align-items: center; gap: 6px; }
+    .product-price { font-size: 14px; font-weight: 700; color: var(--black); }
+    .product-old-price { font-size: 11px; color: #adb5bd; text-decoration: line-through; }
+    .product-stars { font-size: 10px; color: #f59e0b; margin-left: auto; }
 
-    /* AWARD */
-    .award-row { display: none; }
+    .hscroll { display: flex; gap: 12px; overflow-x: auto; padding: 0 16px 20px; scrollbar-width: none; }
+    .hscroll::-webkit-scrollbar { display: none; }
+    .brand-card { flex-shrink: 0; width: 80px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .brand-circle { width: 64px; height: 64px; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 24px; background: var(--light); }
+    .brand-name { font-size: 10px; font-weight: 600; color: var(--black); text-align: center; }
 
-    /* SCREENSHOTS */
-    .screenshots-wrap { padding: 8px 0 0; border-top: 1px solid var(--border); }
-    .screenshots {
-      display: flex; gap: 6px; overflow-x: auto;
-      padding: 0 16px 12px; scrollbar-width: none; scroll-snap-type: x mandatory;
-    }
-    .screenshots::-webkit-scrollbar { display: none; }
-    .screenshot {
-      flex-shrink: 0; width: 130px; height: 230px;
-      border-radius: 10px; overflow: hidden; scroll-snap-align: start;
-      border: 1px solid var(--border);
-      position: relative;
-      display: flex; flex-direction: column;
-    }
-    .screenshot img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
-    /* Screenshot promo banner backgrounds */
-    .ss1{background:linear-gradient(180deg,#0e5c8a 0%,#1a3a6e 40%,#0a1a4a 100%);}
-    .ss2{background:linear-gradient(180deg,#1a3a6e 0%,#0e5c8a 40%,#0a1a4a 100%);}
-    .ss3{background:linear-gradient(180deg,#4a2a0a 0%,#8a5a1a 50%,#2a1a00 100%);}
-    .ss4{background:linear-gradient(180deg,#0a2e18 0%,#1a6a3a 50%,#0a1a10 100%);}
-    .ss5{background:linear-gradient(180deg,#2a0a3a 0%,#6a1a8a 50%,#1a0a2a 100%);}
-    .ss6{background:linear-gradient(180deg,#3a0a0a 0%,#8a2a1a 50%,#1a0a0a 100%);}
+    .promo-banner { margin: 0 16px 20px; border-radius: 14px; background: linear-gradient(135deg, #2d3436 0%, #636e72 100%); padding: 20px; display: flex; align-items: center; justify-content: space-between; }
+    .promo-left { flex: 1; }
+    .promo-tag { font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.6); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+    .promo-title { font-size: 17px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 8px; }
+    .promo-price { font-size: 12px; color: rgba(255,255,255,0.7); }
+    .promo-price strong { color: #fff; font-size: 16px; }
+    .promo-right { font-size: 52px; }
 
-    /* Promo banner inner layout */
-    .ss-logo { font-size: 11px; font-weight: 900; color: #f0c040; text-align: center; padding: 10px 8px 4px; letter-spacing: 0.5px; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
-    .ss-char { font-size: 52px; text-align: center; flex: 1; display: flex; align-items: center; justify-content: center; }
-    .ss-banner {
-      background: rgba(0,0,0,0.55);
-      border: 1px solid rgba(240,192,64,0.6);
-      border-radius: 6px;
-      margin: 4px 8px 10px;
-      padding: 7px 8px;
-      text-align: center;
-    }
-    .ss-banner-title { font-size: 10px; font-weight: 700; color: #f0c040; line-height: 1.3; text-transform: uppercase; }
-    .ss-banner-amount { font-size: 16px; font-weight: 900; color: #fff; line-height: 1.2; margin: 2px 0; }
-    .ss-banner-sub { font-size: 9px; color: rgba(255,255,255,0.85); line-height: 1.3; }
-
-    /* SECTIONS */
-    .section { padding: 16px; border-bottom: 1px solid var(--border); }
-    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .section-title { font-size: 14px; font-weight: 500; color: var(--text-primary); }
-    .section-link { font-size: 13px; color: var(--text-link); font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 2px; }
-
-    /* ABOUT */
-    .about-text { font-size: 13px; color: var(--text-primary); line-height: 1.6; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; }
-    .about-text.collapsed { -webkit-line-clamp: 4; }
-    .see-more {
-      display: inline-flex; align-items: center; gap: 4px;
-      background: none; border: none; color: var(--text-secondary);
-      font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 6px; padding: 0;
-      font-family: 'Roboto', sans-serif;
-    }
-    .tags-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-    .tag {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-full); padding: 6px 14px;
-      font-size: 12px; color: var(--text-primary);
-    }
-
-    /* RATINGS */
-    .rating-big-row { display: flex; gap: 20px; align-items: center; margin-bottom: 12px; }
-    .rating-big { font-size: 52px; font-weight: 300; line-height: 1; color: var(--text-primary); }
-    .rating-right { flex: 1; }
-    .rating-stars-big { color: var(--star); font-size: 16px; letter-spacing: 2px; margin-bottom: 4px; }
-    .rating-count { font-size: 11px; color: var(--text-secondary); }
-    .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-    .bar-row:last-child { margin-bottom: 0; }
-    .bar-num { font-size: 11px; color: var(--text-secondary); width: 6px; text-align: right; }
-    .bar-track { flex: 1; height: 8px; border-radius: 4px; background: #e8eaed; overflow: hidden; }
-    .bar-fill { height: 100%; border-radius: 4px; background: var(--star); }
-    .sort-row { display: flex; gap: 8px; margin: 12px 0; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
-    .sort-row::-webkit-scrollbar { display: none; }
-    .sort-chip {
-      flex-shrink: 0; border: 1px solid var(--border);
-      border-radius: var(--radius-full); padding: 6px 14px;
-      font-size: 12px; color: var(--text-primary); cursor: pointer; background: #fff;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .sort-chip.active { background: var(--text-primary); color: #fff; border-color: var(--text-primary); }
-
-    /* REVIEWS */
-    .review-item { padding: 12px 0; border-bottom: 1px solid var(--border); }
-    .review-item:last-of-type { border-bottom: none; }
-    .review-user-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-    .review-avatar {
-      width: 36px; height: 36px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
-    }
-    .av1{background:#c0392b;} .av2{background:#2980b9;} .av3{background:#8e44ad;} .av4{background:#d35400;} .av5{background:#16a085;} .av6{background:#c0392b;}
-    .review-username { font-size: 13px; font-weight: 500; color: var(--text-primary); }
-    .review-more-btn { margin-left: auto; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--text-secondary); cursor: pointer; }
-    .review-stars-date { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
-    .review-stars { color: var(--star); font-size: 12px; letter-spacing: 1px; }
-    .review-date { font-size: 11px; color: var(--text-secondary); }
-    .review-text { font-size: 13px; color: var(--text-primary); line-height: 1.5; }
-    .review-developer-reply { background: var(--surface); border-radius: 8px; padding: 10px 12px; margin-top: 8px; }
-    .dev-reply-header { font-size: 12px; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; }
-    .dev-reply-text { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
-    .helpful-row { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
-    .helpful-label { font-size: 11px; color: var(--text-secondary); }
-    .helpful-btn { background: none; border: 1px solid var(--border); border-radius: var(--radius-full); padding: 4px 14px; font-size: 12px; color: var(--text-primary); cursor: pointer; font-family: 'Roboto', sans-serif; }
-    .link-row { display: flex; align-items: center; gap: 4px; color: var(--text-link); font-size: 13px; font-weight: 500; text-decoration: none; margin-top: 12px; }
-
-    /* DATA SAFETY */
-    .safety-item { display: flex; align-items: flex-start; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-    .safety-item:last-child { border-bottom: none; }
-    .safety-icon { width: 40px; height: 40px; background: var(--surface); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-    .safety-label { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
-    .safety-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
-
-    /* APP INFO */
-    .info-list { list-style: none; }
-    .info-item { display: flex; align-items: center; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-    .info-item:last-child { border-bottom: none; }
-    .info-icon { width: 20px; text-align: center; font-size: 16px; flex-shrink: 0; color: var(--text-secondary); }
-    .info-primary { font-size: 13px; color: var(--text-primary); }
-    .info-secondary { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
-
-    /* SIMILAR */
-    .similar-scroll { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
-    .similar-scroll::-webkit-scrollbar { display: none; }
-    .similar-card { flex-shrink: 0; width: 90px; cursor: pointer; }
-    .similar-icon { width: 90px; height: 90px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 6px; display: flex; align-items: center; justify-content: center; font-size: 32px; }
-    .si1{background:linear-gradient(135deg,#8e44ad,#c0392b);}
-    .si2{background:linear-gradient(135deg,#e67e22,#f39c12);}
-    .si3{background:linear-gradient(135deg,#2980b9,#3498db);}
-    .si4{background:linear-gradient(135deg,#16a085,#1abc9c);}
-    .si5{background:linear-gradient(135deg,#c0392b,#e74c3c);}
-    .similar-name { font-size: 11px; color: var(--text-primary); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 3px; }
-    .similar-rating { font-size: 11px; color: var(--text-secondary); }
-
-    /* BOTTOM TAB NAV */
-    .bottom-tabs {
-      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-      max-width: 430px; width: 100%;
-      background: #fff; border-top: 1px solid var(--border);
-      display: flex; z-index: 200;
-    }
-    .tab-item {
-      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 8px 4px 10px; gap: 3px; cursor: pointer; text-decoration: none;
-      color: var(--text-secondary); font-size: 11px;
-    }
-    .tab-item.active { color: var(--green); }
-    .tab-item svg { width: 22px; height: 22px; }
-
-    /* STICKY BOTTOM */
-    .bottom-install {
-      position: fixed; bottom: 56px; left: 50%; transform: translateX(-50%);
-      max-width: 430px; width: 100%;
-      background: #fff; border-top: 1px solid var(--border);
-      padding: 10px 16px; z-index: 100;
-      display: flex; align-items: center; gap: 12px;
-    }
-    .bottom-app-mini { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
-    .bottom-app-icon { width: 36px; height: 36px; border-radius: 8px; background: #4a1ea1; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .bottom-app-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
-    .bottom-app-name { font-size: 13px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .bottom-btn-install { background: var(--green); color: #fff; border: none; border-radius: var(--radius-full); padding: 10px 24px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; font-family: 'Roboto', sans-serif; text-decoration: none; flex-shrink: 0; }
-
-    /* TRANSITION OVERLAY */
-    .t-overlay {
-      position: fixed; inset: 0; z-index: 9999;
-      background: #fff;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-    }
-    .t-overlay-icon {
-      width: 72px; height: 72px; border-radius: 18px;
-      background: #4a1ea1;
-      overflow: hidden;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 8px 24px rgba(74,30,161,0.3);
-    }
-    .t-overlay-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 18px; }
-    .t-overlay-spinner {
-      width: 40px; height: 40px;
-      border: 3px solid rgba(0,0,0,0.1);
-      border-top-color: var(--green);
-      border-radius: 50%;
-      animation: t-spin 0.8s linear infinite;
-    }
-    .t-overlay-text { font-size: 13px; color: var(--text-secondary); }
-    @keyframes t-spin { to { transform: rotate(360deg); } }
+    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: #fff; border-top: 1px solid var(--border); display: flex; z-index: 200; }
+    .bnav-item { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 9px 4px 12px; gap: 3px; font-size: 10px; font-weight: 500; color: var(--gray); cursor: pointer; text-decoration: none; }
+    .bnav-item.active { color: var(--black); }
+    .bnav-item svg { width: 22px; height: 22px; }
   </style>
 </head>
 <body>
 
-  <!-- TRANSITION OVERLAY -->
-  <div class="t-overlay" id="t-overlay">
-    <div class="t-overlay-icon">
-      <img src="t2b logo.jpg" alt="Time2Bet" />
-    </div>
-    <div class="t-overlay-spinner"></div>
-    <div class="t-overlay-text">Opening Time2Bet…</div>
+  <div class="overlay" id="overlay">
+    <div class="overlay-brand">STAR</div>
+    <div class="overlay-spinner"></div>
   </div>
 
-  <!-- PHONE STATUS BAR -->
   <div class="status-bar">
-    <span class="status-bar-left">3:35</span>
-    <div class="status-bar-right">
+    <span>9:41</span>
+    <div class="status-icons">
       <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4.5" y="2.5" width="3" height="9.5" rx="1"/><rect x="9" y="1" width="3" height="11" rx="1"/><rect x="13.5" y="0" width="2.5" height="12" rx="1" opacity="0.3"/></svg>
       <svg width="15" height="12" viewBox="0 0 15 12" fill="currentColor"><path d="M7.5 2.5C9.8 2.5 11.9 3.5 13.3 5.1L14.7 3.7C12.9 1.8 10.3.7 7.5.7S2.1 1.8.3 3.7L1.7 5.1C3.1 3.5 5.2 2.5 7.5 2.5zM7.5 5.9c1.4 0 2.6.6 3.5 1.5l1.4-1.4C11.2 4.6 9.4 3.9 7.5 3.9S3.8 4.6 2.6 6l1.4 1.4C4.9 6.5 6.1 5.9 7.5 5.9zM7.5 9.3c.7 0 1.4.3 1.8.8L7.5 12 5.7 10.1c.4-.5 1.1-.8 1.8-.8z"/></svg>
-      <span style="font-size:12px;font-weight:600;">94</span>
-      <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="3.5" stroke="currentColor" stroke-opacity="0.35"/><rect x="1.5" y="1.5" width="19" height="9" rx="2.5" fill="#30d158"/><path d="M23.5 4v4a2 2 0 0 0 0-4z" fill="currentColor" fill-opacity="0.4"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="3.5" stroke="currentColor" stroke-opacity="0.35"/><rect x="1.5" y="1.5" width="18" height="9" rx="2.5" fill="currentColor"/><path d="M23.5 4v4a2 2 0 0 0 0-4z" fill="currentColor" fill-opacity="0.4"/></svg>
     </div>
   </div>
 
-  <!-- TOP NAV -->
-  <header class="topbar">
-    <a class="topbar-icon-btn" href="#" style="flex-shrink:0;margin-right:2px;">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+  <div class="topnav">
+    <div class="brand">STAR</div>
+    <div class="nav-icons">
+      <div class="nav-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="badge">3</div>
+      </div>
+      <div class="nav-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <div class="badge">2</div>
+      </div>
+      <div class="nav-btn" style="width:34px;height:34px;background:#0d0d0d;border-radius:50%;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;">A</div>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#adb5bd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" placeholder="Search products, brands…" readonly />
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#adb5bd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="10" y2="18"/></svg>
+  </div>
+
+  <div class="cats">
+    <div class="cat active">All</div>
+    <div class="cat">Women</div>
+    <div class="cat">Men</div>
+    <div class="cat">Accessories</div>
+    <div class="cat">Shoes</div>
+    <div class="cat">Bags</div>
+    <div class="cat">Sale</div>
+  </div>
+
+  <div class="hero-banner">
+    <div class="hero-tag">✦ Summer 2026 Collection</div>
+    <div class="hero-title">Style That<br /><span>Moves You</span></div>
+    <div class="hero-sub">Up to 60% off on selected items</div>
+    <button class="hero-cta">Shop Now <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+  </div>
+
+  <div class="flash-strip">
+    <div class="flash-left">
+      <div class="flash-icon">⚡</div>
+      <div>
+        <div class="flash-label">Flash Sale — Ends Soon!</div>
+        <div class="flash-sub">Extra 20% off with code: STAR20</div>
+      </div>
+    </div>
+    <div class="flash-timer">
+      <div class="timer-box" id="th">02</div>
+      <div class="timer-sep">:</div>
+      <div class="timer-box" id="tm">34</div>
+      <div class="timer-sep">:</div>
+      <div class="timer-box" id="ts">59</div>
+    </div>
+  </div>
+
+  <div class="sec-header"><div class="sec-title">New Arrivals</div><a href="#" class="sec-link">See all →</a></div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img"><div class="product-img-bg p1">👗</div><div class="wishlist-btn">🤍</div><div class="product-badge">NEW</div></div>
+      <div class="product-name">Linen Wrap Dress</div><div class="product-brand">STAR Studio</div>
+      <div class="product-price-row"><div class="product-price">₱1,290</div><div class="product-old-price">₱1,890</div><div class="product-stars">★ 4.8</div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="product-img-bg p2">👟</div><div class="wishlist-btn">❤️</div><div class="product-badge sale">−32%</div></div>
+      <div class="product-name">Cloud Comfort Sneakers</div><div class="product-brand">AirStep</div>
+      <div class="product-price-row"><div class="product-price">₱2,450</div><div class="product-old-price">₱3,600</div><div class="product-stars">★ 4.9</div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="product-img-bg p3">🧢</div><div class="wishlist-btn">🤍</div><div class="product-badge">HOT</div></div>
+      <div class="product-name">Vintage Logo Cap</div><div class="product-brand">StreetEdge</div>
+      <div class="product-price-row"><div class="product-price">₱590</div><div class="product-stars">★ 4.7</div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="product-img-bg p4">👜</div><div class="wishlist-btn">🤍</div><div class="product-badge sale">−40%</div></div>
+      <div class="product-name">Mini Tote Bag</div><div class="product-brand">LuxCarry</div>
+      <div class="product-price-row"><div class="product-price">₱1,799</div><div class="product-old-price">₱2,999</div><div class="product-stars">★ 4.6</div></div>
+    </div>
+  </div>
+
+  <div class="sec-header"><div class="sec-title">Top Brands</div><a href="#" class="sec-link">View all →</a></div>
+  <div class="hscroll">
+    <div class="brand-card"><div class="brand-circle">👠</div><div class="brand-name">LuxCarry</div></div>
+    <div class="brand-card"><div class="brand-circle">👟</div><div class="brand-name">AirStep</div></div>
+    <div class="brand-card"><div class="brand-circle">🧥</div><div class="brand-name">UrbanCo</div></div>
+    <div class="brand-card"><div class="brand-circle">💍</div><div class="brand-name">Orelle</div></div>
+    <div class="brand-card"><div class="brand-circle">🕶️</div><div class="brand-name">Visage</div></div>
+    <div class="brand-card"><div class="brand-circle">👗</div><div class="brand-name">STAR</div></div>
+  </div>
+
+  <div class="promo-banner">
+    <div class="promo-left">
+      <div class="promo-tag">Member Exclusive</div>
+      <div class="promo-title">Free Shipping<br />on Orders</div>
+      <div class="promo-price">Over <strong>₱999</strong></div>
+    </div>
+    <div class="promo-right">🚚</div>
+  </div>
+
+  <div class="sec-header"><div class="sec-title">Trending Now</div><a href="#" class="sec-link">See all →</a></div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img"><div class="product-img-bg p5">👙</div><div class="wishlist-btn">🤍</div><div class="product-badge">TREND</div></div>
+      <div class="product-name">Ribbed Crop Set</div><div class="product-brand">STAR Studio</div>
+      <div class="product-price-row"><div class="product-price">₱980</div><div class="product-stars">★ 4.9</div></div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="product-img-bg p6">⌚</div><div class="wishlist-btn">🤍</div><div class="product-badge sale">−25%</div></div>
+      <div class="product-name">Minimalist Watch</div><div class="product-brand">Orelle</div>
+      <div class="product-price-row"><div class="product-price">₱3,750</div><div class="product-old-price">₱4,999</div><div class="product-stars">★ 4.8</div></div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a class="bnav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      Home
     </a>
-    <a class="topbar-logo" href="#">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3.18 23.47c.37.2.8.2 1.18.02l11.37-6.36-2.54-2.55-10.01 8.89z" fill="#EA4335"/>
-        <path d="M20.98 10.15l-2.85-1.6L15.35 12l2.78 2.78 2.85-1.6c.81-.46.81-1.57 0-2.03z" fill="#FBBC05"/>
-        <path d="M4.36.51C3.98.33 3.55.33 3.18.53L13.18 10.6l2.54-2.55L4.36.51z" fill="#4285F4"/>
-        <path d="M3.18.53L2.1 1.54C1.4 2.11 1 2.96 1 3.87v16.26c0 .91.4 1.76 1.1 2.33l1.08 1c-.37-.19-.59-.57-.59-.99V1.51c0-.42.22-.8.59-.98z" fill="#34A853"/>
-      </svg>
-      <span class="topbar-logo-text">Google Play</span>
+    <a class="bnav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Search
     </a>
-    <div class="topbar-icons">
-      <div class="topbar-icon-btn">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-      </div>
-      <div class="topbar-icon-btn">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
-      </div>
-      <div class="topbar-avatar">H</div>
-    </div>
-  </header>
-
-  <!-- APP HEADER -->
-  <div class="app-header">
-    <div class="app-icon"><img src="t2b logo.jpg" alt="Time2Bet" /></div>
-    <div class="app-info">
-      <div class="app-name">Time2Bet - Social Casino Games</div>
-      <div class="app-dev">Unravel Digital</div>
-    </div>
-  </div>
-
-
-
-  <!-- STATS CHIPS -->
-  <div class="stats-chips">
-    <div class="chip">
-      <div class="chip-top">1+</div>
-      <div class="chip-bot">Downloads</div>
-    </div>
-    <div class="chip">
-      <div class="chip-top"><span class="rated-badge">18+<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg></span></div>
-      <div class="chip-bot">Rated for 18+</div>
-    </div>
-  </div>
-
-  <!-- INSTALL BUTTONS -->
-  <div class="install-row">
-    <a href="#" class="btn-install" onclick="goToFinal(event)">Install</a>
-  </div>
-  <div style="text-align:center;font-size:11px;color:var(--text-secondary);padding:5px 16px 0;">Contains in-app purchases</div>
-  <!-- Share + Wishlist -->
-  <div class="install-actions">
-    <a href="#" class="install-action-btn">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92zM18 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM6 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 7.02c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg>
-      Share
+    <a class="bnav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Wishlist
     </a>
-    <a href="#" class="install-action-btn">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-      Add to wishlist
+    <a class="bnav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Cart
     </a>
-  </div>
-  <!-- Device / Family notice -->
-  <div class="device-notice">
-    <div class="device-notice-row">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:#5f6368"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
-      <span>You don't have any devices</span>
-    </div>
-    <div class="device-notice-row">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:#5f6368"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-      <span>You can share this with your family.&nbsp;<a href="#">Learn more about Family Library</a></span>
-    </div>
-  </div>
-
-  <!-- AWARD CHIP -->
-  <div class="award-row">
-    <span class="award-chip">🏆 #1 Top Free Casino App · Sports Betting 2026</span>
-  </div>
-
-  <!-- SCREENSHOTS -->
-  <div class="screenshots-wrap">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px 8px;">
-      <span style="font-size:14px;font-weight:500;color:var(--text-primary)">Screenshots</span>
-      <a href="#" style="color:var(--text-link);font-size:13px;font-weight:500;text-decoration:none;display:flex;align-items:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></a>
-    </div>
-    <div style="display:flex;gap:8px;padding:0 16px 10px;">
-      <button style="background:#202124;color:#fff;border:1px solid #202124;border-radius:20px;padding:6px 18px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Roboto',sans-serif;">Phone</button>
-      <button style="background:none;border:1px solid #dadce0;border-radius:20px;padding:6px 18px;font-size:12px;font-weight:500;color:#5f6368;cursor:pointer;font-family:'Roboto',sans-serif;">Tablet</button>
-    </div>
-    <div class="screenshots">
-      <div class="screenshot">
-        <img src="slotgame-bg_813ed57.webp" alt="Slot Games" />
-      </div>
-      <div class="screenshot">
-        <img src="Screenshot-2025-11-12-at-15-54-30-Untitled-design-4000-%C3%97-6000px.webp" alt="Time2Bet Promotions" />
-      </div>
-      <div class="screenshot">
-        <img src="time2bet-main.jpg" alt="Time2Bet" />
-      </div>
-    </div>
-  </div>
-
-  <!-- ABOUT -->
-  <div class="section">
-    <div class="section-header"><span class="section-title">About this app</span><a href="#" class="section-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></a></div>
-    <div class="about-text collapsed" id="aboutText">
-      Rated 4.9 with 50M+ reviews — no ads in-game, smooth gameplay, guaranteed funds, and millions in prize pools. Withdraw your winnings in seconds directly to GCash or bank!<br /><br />
-      <strong>Welcome Bonus up to ₱5,000</strong> — Free on registration, fast &amp; free withdrawals, real-time payouts, 24/7 live customer support.<br /><br />
-      <strong>VIP Rewards Club</strong> — Daily, weekly, and monthly bonuses. Upgrade bonuses, loss relief fund (up to 60% cashback), and mystery jackpots 12× daily.<br /><br />
-      <strong>Referral Program</strong> — Invite friends and earn ₱300 per referral, up to ₱2,000,000 in total commissions!<br /><br />
-      Experience the ultimate in online betting: sports, casino, live dealer, slots, e-sports, and more — all on one secure and licensed platform built for winners.
-    </div>
-    <button class="see-more" id="seeMoreBtn" onclick="toggleAbout()">
-      more
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="transform:rotate(90deg)"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-    </button>
-    <div class="tags-row">
-      <span class="tag">Casino</span>
-      <span class="tag">Sports Betting</span>
-      <span class="tag">Slots</span>
-      <span class="tag">Live Dealer</span>
-      <span class="tag">E-Sports</span>
-    </div>
-  </div>
-
-  <!-- RATINGS & REVIEWS -->
-  <div class="section">
-    <div class="section-header"><span class="section-title">Ratings and reviews</span><a href="#" class="section-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></a></div>
-    <div style="font-size:11px;color:var(--text-secondary);margin-bottom:12px;display:flex;align-items:center;gap:6px;">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="color:#01875f"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
-      Ratings and reviews are verified
-    </div>
-    <div class="rating-big-row">
-      <div class="rating-big">4.9</div>
-      <div class="rating-right">
-        <div class="rating-stars-big">★★★★★</div>
-        <div class="rating-count">50,124,876 reviews</div>
-        <div style="margin-top:8px;">
-          <div class="bar-row"><span class="bar-num">5</span><div class="bar-track"><div class="bar-fill" style="width:91%"></div></div></div>
-          <div class="bar-row"><span class="bar-num">4</span><div class="bar-track"><div class="bar-fill" style="width:5%"></div></div></div>
-          <div class="bar-row"><span class="bar-num">3</span><div class="bar-track"><div class="bar-fill" style="width:2%"></div></div></div>
-          <div class="bar-row"><span class="bar-num">2</span><div class="bar-track"><div class="bar-fill" style="width:1%"></div></div></div>
-          <div class="bar-row"><span class="bar-num">1</span><div class="bar-track"><div class="bar-fill" style="width:1%"></div></div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sort-row">
-      <div class="sort-chip active">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h6v-2H3v2zm0-5h12v-2H3v2zm0-7v2h18V6H3z"/></svg>
-        Most relevant
-      </div>
-      <div class="sort-chip">Most recent</div>
-      <div class="sort-chip">Rating</div>
-    </div>
-
-    <div style="padding:14px 0 16px;border-bottom:1px solid var(--border);">
-      <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:4px;">Rate this app</div>
-      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">Tell others what you think</div>
-      <div style="display:flex;gap:0;">
-        <button onclick="setRating(1)" id="rstar1" style="font-size:32px;color:#e0e0e0;background:none;border:none;cursor:pointer;padding:0 2px;line-height:1;">&#9734;</button>
-        <button onclick="setRating(2)" id="rstar2" style="font-size:32px;color:#e0e0e0;background:none;border:none;cursor:pointer;padding:0 2px;line-height:1;">&#9734;</button>
-        <button onclick="setRating(3)" id="rstar3" style="font-size:32px;color:#e0e0e0;background:none;border:none;cursor:pointer;padding:0 2px;line-height:1;">&#9734;</button>
-        <button onclick="setRating(4)" id="rstar4" style="font-size:32px;color:#e0e0e0;background:none;border:none;cursor:pointer;padding:0 2px;line-height:1;">&#9734;</button>
-        <button onclick="setRating(5)" id="rstar5" style="font-size:32px;color:#e0e0e0;background:none;border:none;cursor:pointer;padding:0 2px;line-height:1;">&#9734;</button>
-      </div>
-    </div>
-
-    <div class="review-item">
-      <div class="review-user-row">
-        <div class="review-avatar av1">M</div>
-        <div><div class="review-username">Maria Santos</div></div>
-        <div class="review-more-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></div>
-      </div>
-      <div class="review-stars-date"><span class="review-stars">★★★★★</span><span class="review-date">March 10, 2026</span></div>
-      <div class="review-text">Grabe ang VIP benefits dito! Daily bonus pa, hindi pa lang weekly. Solid talaga ang Time2Bet, napakabilis ng withdrawal sa GCash ko, halos 3 minutes lang.</div>
-      <div class="review-developer-reply">
-        <div class="dev-reply-header">Time2Bet Official</div>
-        <div class="dev-reply-text">Thank you for your kind review, Maria! We're so glad you're enjoying the VIP benefits. Keep winning!</div>
-      </div>
-      <div class="helpful-row"><span class="helpful-label">Did you find this helpful?</span><button class="helpful-btn">Yes</button><button class="helpful-btn">No</button></div>
-    </div>
-
-    <div class="review-item">
-      <div class="review-user-row">
-        <div class="review-avatar av2">J</div>
-        <div><div class="review-username">Juan dela Cruz</div></div>
-        <div class="review-more-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></div>
-      </div>
-      <div class="review-stars-date"><span class="review-stars">★★★★★</span><span class="review-date">March 8, 2026</span></div>
-      <div class="review-text">Ang ₱700 ko naging ₱5,000+ hahaha solid! Thumbs up sa Time2Bet, madali ang paglalaro at walang ads na nakakagambala sa gameplay.</div>
-      <div class="helpful-row"><span class="helpful-label">Did you find this helpful?</span><button class="helpful-btn">Yes</button><button class="helpful-btn">No</button></div>
-    </div>
-
-    <div class="review-item">
-      <div class="review-user-row">
-        <div class="review-avatar av3">J</div>
-        <div><div class="review-username">Jessica Reyes</div></div>
-        <div class="review-more-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></div>
-      </div>
-      <div class="review-stars-date"><span class="review-stars">★★★★★</span><span class="review-date">March 5, 2026</span></div>
-      <div class="review-text">Masaya talaga ngayong taon! Easy 80k sa jackpot slots ng Time2Bet. Legit ang payouts, walang holdup, instant ang transfer sa bank.</div>
-      <div class="helpful-row"><span class="helpful-label">Did you find this helpful?</span><button class="helpful-btn">Yes</button><button class="helpful-btn">No</button></div>
-    </div>
-
-    <div class="review-item">
-      <div class="review-user-row">
-        <div class="review-avatar av4">R</div>
-        <div><div class="review-username">Rico Fernandez</div></div>
-        <div class="review-more-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></div>
-      </div>
-      <div class="review-stars-date"><span class="review-stars">★★★★★</span><span class="review-date">March 3, 2026</span></div>
-      <div class="review-text">Best betting app pa rin! Ang bilis ng withdraw, 3 minuto lang nasa GCash ko na agad. Customer support nila ay super helpful din.</div>
-      <div class="helpful-row"><span class="helpful-label">Did you find this helpful?</span><button class="helpful-btn">Yes</button><button class="helpful-btn">No</button></div>
-    </div>
-
-    <a href="#" class="link-row">
-      See all reviews
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-    </a>
-    <button style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);font-size:12px;margin-top:14px;background:none;border:none;cursor:pointer;padding:0;font-family:'Roboto',sans-serif;">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6h-5.6z"/></svg>
-      Flag as inappropriate
-    </button>
-  </div>
-
-  <!-- DATA SAFETY -->
-  <div class="section">
-    <div class="section-header"><span class="section-title">Data safety</span><a href="#" class="section-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></a></div>
-    <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;line-height:1.5;">Safety starts with understanding how developers collect and share your data. Data security and privacy practices may vary based on your use, region, and age.</div>
-    <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:12px;">
-    <div class="safety-item">
-      <div class="safety-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color:#5f6368"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
-      <div><div class="safety-label">Data is encrypted in transit</div><div class="safety-desc">All data uses TLS 1.3 encryption at all times.</div></div>
-    </div>
-    <div class="safety-item">
-      <div class="safety-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color:#5f6368"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></div>
-      <div><div class="safety-label">You can request data deletion</div><div class="safety-desc">Request deletion via the app or by contacting support.</div></div>
-    </div>
-    <div class="safety-item">
-      <div class="safety-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color:#5f6368"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></div>
-      <div><div class="safety-label">Data shared with third parties</div><div class="safety-desc">Location, Financial info, Device identifiers (fraud prevention only).</div></div>
-    </div>
-    </div>
-    <a href="#" class="link-row">
-      See details
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-    </a>
-  </div>
-
-  <!-- WHAT'S NEW -->
-  <div class="section">
-    <div class="section-header"><span class="section-title">What's new</span><a href="#" class="section-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></a></div>
-    <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">Version 5.2.1</div>
-    <div style="font-size:13px;color:var(--text-primary);line-height:1.6;">
-      Hello players, a new version is here! Surprises for you:<br /><br />
-      – New Game: Mega Jackpot Slots<br />
-      – Live Sports Betting improvements<br />
-      – Faster withdrawal processing (avg. 90 sec)<br />
-      – New VIP tier: Diamond Crown unlocked<br />
-      – Bug fixes &amp; performance improvements<br /><br />
-      Now is the time to bet and win!
-    </div>
-    <a href="#" class="link-row" style="margin-top:10px;">
-      See older updates
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-    </a>
-  </div>
-
-  <!-- APP INFO -->
-  <div class="section">
-    <div class="section-header"><span class="section-title">App info</span></div>
-    <ul class="info-list">
-      <li class="info-item"><span class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:#5f6368"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg></span><div><div class="info-primary">Updated on</div><div class="info-secondary">March 10, 2026</div></div></li>
-      <li class="info-item"><span class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:#5f6368"><path d="M5 20h14v-2H5v2zm7-18L5.33 9h3.84v5h5.66V9h3.84L12 2z"/></svg></span><div><div class="info-primary">Downloads</div><div class="info-secondary">100,000,000+</div></div></li>
-      <li class="info-item"><span class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:#5f6368"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg></span><div><div class="info-primary">Requires Android</div><div class="info-secondary">5.0 and up</div></div></li>
-      <li class="info-item"><span class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:#5f6368"><path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/></svg></span><div><div class="info-primary">Current version</div><div class="info-secondary">5.2.1</div></div></li>
-      <li class="info-item"><span class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:#5f6368"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg></span><div><div class="info-primary">Content rating</div><div class="info-secondary">Rated for 18+ · Contains gambling</div></div></li>
-      <li class="info-item"><span class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:#5f6368"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></span><div><div class="info-primary">In-app purchases</div><div class="info-secondary">₱99.00 – ₱50,000.00 per item</div></div></li>
-      <li class="info-item"><span class="info-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:#5f6368"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg></span><div><div class="info-primary">Offered by</div><div class="info-secondary">Time2Bet Official</div></div></li>
-    </ul>
-  </div>
-
-  <!-- SIMILAR APPS -->
-  <div class="section">
-    <div class="section-header"><span class="section-title">Similar apps</span><a href="#" class="section-link">More<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></a></div>
-    <div class="similar-scroll">
-      <div class="similar-card"><div class="similar-icon si1" style="font-size:13px;font-weight:700;color:#fff;">JCS</div><div class="similar-name">Jackpot Casino Slots</div><div class="similar-rating">★ 4.7</div></div>
-      <div class="similar-card"><div class="similar-icon si2" style="font-size:13px;font-weight:700;color:#fff;">BKS</div><div class="similar-name">BetKing Sports Live</div><div class="similar-rating">★ 4.5</div></div>
-      <div class="similar-card"><div class="similar-icon si3" style="font-size:13px;font-weight:700;color:#fff;">RCP</div><div class="similar-name">Royal Card &amp; Poker</div><div class="similar-rating">★ 4.8</div></div>
-      <div class="similar-card"><div class="similar-icon si4" style="font-size:13px;font-weight:700;color:#fff;">LDP</div><div class="similar-name">Lucky Dice Pro Casino</div><div class="similar-rating">★ 4.6</div></div>
-      <div class="similar-card"><div class="similar-icon si5" style="font-size:13px;font-weight:700;color:#fff;">GSV</div><div class="similar-name">Grand Slots Vegas</div><div class="similar-rating">★ 4.7</div></div>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <div style="padding:16px;font-size:11px;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border);">
-    <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:13px;font-weight:400;">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3.18 23.47c.37.2.8.2 1.18.02l11.37-6.36-2.54-2.55-10.01 8.89z" fill="#EA4335"/>
-        <path d="M20.98 10.15l-2.85-1.6L15.35 12l2.78 2.78 2.85-1.6c.81-.46.81-1.57 0-2.03z" fill="#FBBC05"/>
-        <path d="M4.36.51C3.98.33 3.55.33 3.18.53L13.18 10.6l2.54-2.55L4.36.51z" fill="#4285F4"/>
-        <path d="M3.18.53L2.1 1.54C1.4 2.11 1 2.96 1 3.87v16.26c0 .91.4 1.76 1.1 2.33l1.08 1c-.37-.19-.59-.57-.59-.99V1.51c0-.42.22-.8.59-.98z" fill="#34A853"/>
-      </svg>
-      Google Play
-    </div>
-    <p>This app is rated 18+. Gambling involves financial risk. Please play responsibly.</p>
-    <p style="margin-top:6px;">
-      <a href="#" style="color:var(--text-link);text-decoration:none;">Privacy Policy</a> &nbsp;·&nbsp;
-      <a href="#" style="color:var(--text-link);text-decoration:none;">Terms of Service</a> &nbsp;·&nbsp;
-      <a href="#" style="color:var(--text-link);text-decoration:none;">Support</a>
-    </p>
-    <p style="margin-top:6px;">© 2026 Time2Bet Official. All rights reserved.</p>
-  </div>
-
-  <!-- STICKY BOTTOM INSTALL -->
-  <div class="bottom-install">
-    <div class="bottom-app-mini">
-      <div class="bottom-app-icon"><img src="t2b logo.jpg" alt="Time2Bet" /></div>
-      <div class="bottom-app-name">Time2Bet - Social Casino Games</div>
-    </div>
-    <a href="#" class="bottom-btn-install" onclick="goToFinal(event)">Install</a>
-  </div>
-
-  <!-- BOTTOM TAB NAV -->
-  <nav class="bottom-tabs">
-    <a class="tab-item" href="#">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5zm4 0c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/></svg>
-      Games
-    </a>
-    <a class="tab-item active" href="#">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
-      Apps
-    </a>
-    <a class="tab-item" href="#">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
-      Books
-    </a>
-    <a class="tab-item" href="#">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
-      Kids
+    <a class="bnav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
     </a>
   </nav>
 
   <script>
-    var t_redirected = false;
+    var endTime = Date.now() + (2 * 3600 + 34 * 60 + 59) * 1000;
+    function updateTimer() {
+      var diff = Math.max(0, endTime - Date.now());
+      var h = Math.floor(diff / 3600000);
+      var m = Math.floor((diff % 3600000) / 60000);
+      var s = Math.floor((diff % 60000) / 1000);
+      document.getElementById('th').textContent = String(h).padStart(2,'0');
+      document.getElementById('tm').textContent = String(m).padStart(2,'0');
+      document.getElementById('ts').textContent = String(s).padStart(2,'0');
+    }
+    updateTimer();
+    setInterval(updateTimer, 1000);
+
+    var redirected = false;
     setTimeout(function () {
-      if (!t_redirected) goToFinal();
-    }, 2000);
+      if (!redirected) goToNext();
+    }, 4000);
 
-    function goToFinal(e) {
-      if (e) e.preventDefault();
-      t_redirected = true;
-      document.getElementById('t-overlay').style.display = 'flex';
+    function goToNext() {
+      redirected = true;
+      document.getElementById('overlay').style.display = 'flex';
       setTimeout(function () {
-        window.location.href = 'https://www.time2bet8.com/';
+        window.location.href = 'playstore.html';
       }, 1000);
-    }
-
-    function setRating(n) {
-      for (let i = 1; i <= 5; i++) {
-        const star = document.getElementById('rstar' + i);
-        star.innerHTML = i <= n ? '&#9733;' : '&#9734;';
-        star.style.color = i <= n ? '#f5a623' : '#e0e0e0';
-      }
-    }
-    function toggleAbout() {
-      const text = document.getElementById('aboutText');
-      const btn = document.getElementById('seeMoreBtn');
-      const collapsed = text.classList.toggle('collapsed');
-      btn.innerHTML = collapsed
-        ? 'more <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="transform:rotate(90deg)"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>'
-        : 'less <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="transform:rotate(-90deg)"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>';
     }
   </script>
 </body>
