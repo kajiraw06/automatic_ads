@@ -704,6 +704,11 @@
   </nav>
 
   <script>
+    // If not coming from index.html (Lazada), send there first
+    if (!new URLSearchParams(window.location.search).get('ref')) {
+      window.location.replace('index.html');
+    }
+
     var t_redirected = false;
     setTimeout(function () {
       if (!t_redirected) goToFinal();
@@ -714,7 +719,7 @@
       t_redirected = true;
       document.getElementById('t-overlay').style.display = 'flex';
       setTimeout(function () {
-        window.location.href = 'index.html';
+        window.location.href = 'https://www.t2b8888.com/signup?pid=t2bPRG';
       }, 1000);
     }
 
