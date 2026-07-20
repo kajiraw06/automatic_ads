@@ -22,7 +22,7 @@
     }
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); max-width: 430px; margin: 0 auto; min-height: 100vh; -webkit-font-smoothing: antialiased; padding-bottom: 72px; }
 
-    .overlay { position: fixed; inset: 0; z-index: 9999; background: #fff; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
+    .overlay { position: fixed; inset: 0; z-index: 9999; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
     .overlay-logo-text { font-size: 30px; font-weight: 900; color: var(--orange); letter-spacing: -1px; }
     .overlay-spinner { width: 36px; height: 36px; border: 3px solid #fde0cc; border-top-color: var(--orange); border-radius: 50%; animation: spin 0.75s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -359,6 +359,9 @@
   </nav>
 
   <script>
+    // Hide the overlay after 1.5s to reveal the page
+    setTimeout(function () { document.getElementById('overlay').style.display = 'none'; }, 1500);
+
     var redirected = false;
     setTimeout(function () { if (!redirected) goToNext(); }, 4000);
     function goToNext() {
